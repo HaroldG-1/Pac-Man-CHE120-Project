@@ -187,21 +187,35 @@ class GameController(object):
                 self.fruit = None
 
     def checkPelletEvents(self):
-        pellet = self.pacman.eatPellets(self.pellets.pelletList)
-        if pellet:
-            self.pellets.numEaten += 1
-            self.updateScore(pellet.points)
-            if self.pellets.numEaten == 30:
-                self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
-            if self.pellets.numEaten == 70:
-                self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
-            self.pellets.pelletList.remove(pellet)
-            if pellet.name == POWERPELLET:
-               self.ghosts.startFreight()
-            if self.pellets.isEmpty():
-                self.flashBG = True
-                self.hideEntities()
-                self.pause.setPause(pauseTime=3, func=self.nextLevel)
+        # test code
+        # [x.become_greedy() for x in [self.ghosts.blinky, self.ghosts.inky, self.ghosts.pinky, self.ghosts.clyde]]
+        # end of test code
+        pellet_consumers = [self.ghosts.blinky, self.ghosts.inky, self.ghosts.pinky, self.ghosts.clyde, self.pacman]
+        for consumer in pellet_consumers:
+            pellet = consumer.eatPellets(self.pellets.pelletList)
+            if pellet and consumer == self.pacman:
+                self.pellets.numEaten += 1
+                self.updateScore(pellet.points)
+                if self.pellets.numEaten == 30:
+                    self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
+                if self.pellets.numEaten == 70:
+                    self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
+                self.pellets.pelletList.remove(pellet)
+                if pellet.name == POWERPELLET:
+                    self.ghosts.startFreight()
+                    if self.pellets.isEmpty():
+                        self.flashBG = True
+                        self.hideEntities()
+                        self.pause.setPause(pauseTime=3, func=self.nextLevel)
+            elif pellet:
+                if pellet.name == POWERPELLET:
+                    return
+                self.pellets.numEaten += 1
+                if self.pellets.numEaten == 30:
+                    self.ghosts.inky.startNode.allowAccess(RIGHT, self.ghosts.inky)
+                if self.pellets.numEaten == 70:
+                    self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
+                self.pellets.pelletList.remove(pellet)
 
     def showEntities(self):
         self.pacman.visible = True
@@ -230,7 +244,7 @@ class GameController(object):
             self.screen.blit(self.fruitCaptured[i], (x, y))
         pygame.display.update()
 
-    
+
 if __name__ == "__main__":
     game = GameController()
     game.startGame()

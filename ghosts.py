@@ -10,13 +10,47 @@ class Ghost(Entity):
     def __init__(self, node, pacman=None, blinky=None):
         Entity.__init__(self, node)
         self.name = GHOST
-        self.points = 200
+        self.default_points = 200
+        self.points = self.default_points
         self.goal = Vector2()
         # self.directionMethod = self.goalDirection
         self.pacman = pacman
         self.mode = ModeController(self)
         self.blinky = blinky
         self.homeNode = node
+        self.mod_hook = self.default # see https://www.geeksforgeeks.org/c/function-pointer-in-c/ to understand this line
+
+    def default(self, dump):
+        return # see https://www.geeksforgeeks.org/c/function-pointer-in-c/
+    
+    def collect_point(self, pellet_list):
+        for pellet in pellet_list:
+            if self.collideCheck(pellet):
+                self.points += 1 # im assuming this is the #points you get when eating them
+                return pellet
+        return None
+    
+    def collideCheck(self, other):
+        d = self.position - other.position
+        dSquared = d.magnitudeSquared()
+        rSquared = (self.collideRadius + other.collideRadius)**2
+        if dSquared <= rSquared:
+            return True
+        return False
+
+    def eatPellets(self, pellet_list):
+        return self.mod_hook(pellet_list)
+    
+    def become_greedy(self):
+        self.mod_hook = self.collect_point
+
+    def stop_mod(self):
+        self.mod_hook = self.default
+
+
+    def reset(self):
+        self.points = self.default_points
+        Entity.reset(self=self)
 
     def update(self, dt):
         self.sprites.update(dt)
