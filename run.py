@@ -11,6 +11,7 @@ from text import TextGroup
 from sprites import LifeSprites
 from sprites import MazeSprites
 from mazedata import MazeData
+from shader import *
 
 class GameController(object):
     def __init__(self):
@@ -225,6 +226,14 @@ class GameController(object):
         self.pacman.visible = False
         self.ghosts.hide()
 
+    def shader(self, shade_num = 0):
+        match shade_num:
+            case 0:
+                surface = isometric(self.screen)
+                iso_offset_y = SCREENHEIGHT / (1.141) / 4
+                self.screen.fill(BLACK)
+                self.screen.blit(surface, (0, iso_offset_y))
+
     def render(self):
         self.screen.blit(self.background, (0, 0))
         self.pellets.render(self.screen)
@@ -242,6 +251,7 @@ class GameController(object):
             x = SCREENWIDTH - self.fruitCaptured[i].get_width() * (i+1)
             y = SCREENHEIGHT - self.fruitCaptured[i].get_height()
             self.screen.blit(self.fruitCaptured[i], (x, y))
+        self.shader()
         pygame.display.update()
 
 
