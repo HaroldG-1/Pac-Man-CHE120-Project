@@ -88,6 +88,8 @@ class GameController(object):
         self.ghosts.blinky.setStartNode(self.nodes.getNodeFromTiles(*self.mazedata.obj.addOffset(2, 0)))
         self.nodes.denyHomeAccess(self.pacman)
         self.nodes.denyHomeAccessList(self.ghosts)
+        #changed
+        [x.become_greedy() for x in [self.ghosts.blinky, self.ghosts.inky, self.ghosts.pinky, self.ghosts.clyde]]
         self.ghosts.inky.startNode.denyAccess(RIGHT, self.ghosts.inky)
         self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
         self.mazedata.obj.denyGhostsAccess(self.ghosts, self.nodes)
@@ -188,10 +190,15 @@ class GameController(object):
                 self.fruit = None
 
     def checkPelletEvents(self):
-        # test code
-        # [x.become_greedy() for x in [self.ghosts.blinky, self.ghosts.inky, self.ghosts.pinky, self.ghosts.clyde]]
-        # end of test code
-        pellet_consumers = [self.ghosts.blinky, self.ghosts.inky, self.ghosts.pinky, self.ghosts.clyde, self.pacman]
+        #changed
+        ghosts_can_eat = all(ghost.mode.current is not FREIGHT for ghost in self.ghosts)
+        pellet_consumers = [self.pacman]
+        #changed
+        if ghosts_can_eat:
+            pellet_consumers += [self.ghosts.blinky,
+                                self.ghosts.inky,
+                                self.ghosts.pinky,
+                                self.ghosts.clyde]
         for consumer in pellet_consumers:
             pellet = consumer.eatPellets(self.pellets.pelletList)
             if pellet and consumer == self.pacman:
@@ -209,6 +216,7 @@ class GameController(object):
                         self.hideEntities()
                         self.pause.setPause(pauseTime=3, func=self.nextLevel)
             elif pellet:
+                #changed
                 if pellet.name == POWERPELLET:
                     return
                 self.pellets.numEaten += 1
@@ -229,10 +237,11 @@ class GameController(object):
     def shader(self, shade_num = 0):
         match shade_num:
             case 0:
-                surface = isometric(self.screen)
-                iso_offset_y = SCREENHEIGHT / (1.141) / 4
-                self.screen.fill(BLACK)
-                self.screen.blit(surface, (0, iso_offset_y))
+                # surface = isometric(self.screen)
+                # iso_offset_y = SCREENHEIGHT / (1.141) / 4
+                # self.screen.fill(BLACK)
+                # self.screen.blit(surface, (0, iso_offset_y))
+                pass
 
     def render(self):
         self.screen.blit(self.background, (0, 0))
