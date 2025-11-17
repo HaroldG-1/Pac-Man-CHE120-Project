@@ -211,10 +211,10 @@ class GameController(object):
                 self.pellets.pelletList.remove(pellet)
                 if pellet.name == POWERPELLET:
                     self.ghosts.startFreight()
-                    if self.pellets.isEmpty():
-                        self.flashBG = True
-                        self.hideEntities()
-                        self.pause.setPause(pauseTime=3, func=self.nextLevel)
+                if self.pellets.isEmpty():
+                    self.flashBG = True
+                    self.hideEntities()
+                    self.pause.setPause(pauseTime=3, func=self.nextLevel)
             elif pellet:
                 #changed
                 if pellet.name == POWERPELLET:
@@ -225,6 +225,10 @@ class GameController(object):
                 if self.pellets.numEaten == 70:
                     self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
                 self.pellets.pelletList.remove(pellet)
+                if self.pellets.isEmpty():
+                        self.flashBG = True
+                        self.hideEntities()
+                        self.pause.setPause(pauseTime=3, func=self.nextLevel)
 
     def showEntities(self):
         self.pacman.visible = True
@@ -240,7 +244,7 @@ class GameController(object):
                 # surface = isometric(self.screen)
                 # iso_offset_y = SCREENHEIGHT / (1.141) / 4
                 # self.screen.fill(BLACK)
-                # self.screen.blit(surface, (0, iso_offset_y))
+                # self.screen.blit(surface, (0, iso_offset_y)) 
                 pass
 
     def render(self):
