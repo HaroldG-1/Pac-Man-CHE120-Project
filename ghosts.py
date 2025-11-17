@@ -10,18 +10,28 @@ class Ghost(Entity):
     def __init__(self, node, pacman=None, blinky=None):
         Entity.__init__(self, node)
         self.name = GHOST
+        # changed
         self.default_points = 200
         self.points = self.default_points
+        # end of change
         self.goal = Vector2()
         # self.directionMethod = self.goalDirection
         self.pacman = pacman
         self.mode = ModeController(self)
         self.blinky = blinky
         self.homeNode = node
-        self.mod_hook = self.default # see https://www.geeksforgeeks.org/c/function-pointer-in-c/ to understand this line
 
+        # Changed
+        # Acts like a C function pointer
+        # Was intended to be used for more functions
+        self.mod_hook = self.default
+
+    # Changed
+    '''
+    Provides a safe function for mod_hook to call when there is not a mod
+    '''
     def default(self, dump):
-        return # see https://www.geeksforgeeks.org/c/function-pointer-in-c/
+        return
     
     def collect_point(self, pellet_list):
         for pellet in pellet_list:
@@ -29,7 +39,10 @@ class Ghost(Entity):
                 self.points += 1 # im assuming this is the #points you get when eating them
                 return pellet
         return None
-    
+    # Changed
+    '''
+    checks for collisions with other objects using distance
+    '''
     def collideCheck(self, other):
         d = self.position - other.position
         dSquared = d.magnitudeSquared()
@@ -38,16 +51,30 @@ class Ghost(Entity):
             return True
         return False
 
+    # changed
+    '''
+    Consume the pellet
+    Uses mod hook
+    '''
     def eatPellets(self, pellet_list):
         return self.mod_hook(pellet_list)
     
+    # changed
+    '''
+    Sets mod_hook to collect_point
+    '''
     def become_greedy(self):
         self.mod_hook = self.collect_point
 
+    '''
+    Resets the mod_hook
+    '''
     def stop_mod(self):
         self.mod_hook = self.default
 
-
+    '''
+    Reset points gained
+    '''
     def reset(self):
         self.points = self.default_points
         Entity.reset(self=self)
