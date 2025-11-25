@@ -64,6 +64,8 @@ class TextGroup(object):
         self.alltext[PAUSETXT] = Text("PAUSED!", YELLOW, 10.625*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.alltext[GAMEOVERTXT] = Text("GAMEOVER!", YELLOW, 10*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.addText("SCORE", WHITE, 0, 0, size)
+        #changed
+        self.goaltxt_id = self.addText("Goal: 2500", WHITE, 150, 0, size)
         self.addText("LEVEL", WHITE, 23*TILEWIDTH, 0, size)
 
     def update(self, dt):
@@ -85,7 +87,20 @@ class TextGroup(object):
         self.updateText(SCORETXT, str(score).zfill(8))
 
     def updateLevel(self, level):
+        #changed
         self.updateText(LEVELTXT, str(level + 1).zfill(3))
+
+        if level == 0:
+            newgoal = 2500
+        elif level == 1:
+            newgoal = 3000
+        else:
+            newgoal = 3500
+        self.updateGoal(newgoal)
+
+    
+    def updateGoal(self, goal):
+        self.updateText(self.goaltxt_id, f"Goal: {goal}")
 
     def updateText(self, id, value):
         if id in self.alltext.keys():
