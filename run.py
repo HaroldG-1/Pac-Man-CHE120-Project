@@ -72,6 +72,9 @@ class GameController(object):
         self.pause.paused = True
         self.startGame()
         self.textgroup.updateLevel(self.level)
+        #changed
+        self.score = 0
+        self.lives += 1
 
     '''
     Clears background then draws background tiles
@@ -107,7 +110,8 @@ class GameController(object):
         self.nodes.denyHomeAccess(self.pacman)
         self.nodes.denyHomeAccessList(self.ghosts)
         #changed
-        [x.become_greedy() for x in [self.ghosts.blinky, self.ghosts.inky, self.ghosts.pinky, self.ghosts.clyde]]
+        for x in [self.ghosts.blinky, self.ghosts.inky, self.ghosts.pinky, self.ghosts.clyde]:
+            x.become_greedy()
         self.ghosts.inky.startNode.denyAccess(RIGHT, self.ghosts.inky)
         self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
         self.mazedata.obj.denyGhostsAccess(self.ghosts, self.nodes)
@@ -161,10 +165,13 @@ class GameController(object):
     def checkEvents(self):
         for event in pygame.event.get():
             if event.type == QUIT:
+                #changed
+                pygame.quit()
                 exit()
             elif event.type == KEYDOWN:
                 if event.key == K_SPACE:
-                    if self.pacman.alive:
+                    #changed -- bug fix with pausing after a round
+                    if self.pacman.alive and not self.pellets.isEmpty():
                         self.pause.setPause(playerPaused=True)
                         if not self.pause.paused:
                             self.textgroup.hideText()
@@ -250,7 +257,12 @@ class GameController(object):
                 if self.pellets.isEmpty():
                     self.flashBG = True
                     self.hideEntities()
-                    self.pause.setPause(pauseTime=3, func=self.nextLevel)
+                    #changed
+                    if self.met_score_requirement():
+                        self.pause.setPause(pauseTime=3, func=self.nextLevel)
+                    else:
+                        self.restartGame()
+                        
             elif pellet:
                 #changed
                 if pellet.name == POWERPELLET:
@@ -262,9 +274,13 @@ class GameController(object):
                     self.ghosts.clyde.startNode.allowAccess(LEFT, self.ghosts.clyde)
                 self.pellets.pelletList.remove(pellet)
                 if self.pellets.isEmpty():
-                        self.flashBG = True
-                        self.hideEntities()
+                    self.flashBG = True
+                    self.hideEntities()
+                    #changed
+                    if self.met_score_requirement():
                         self.pause.setPause(pauseTime=3, func=self.nextLevel)
+                    else:
+                        self.restartGame()
 
         '''
         Turns on draw flags for moveable entities
@@ -314,6 +330,18 @@ class GameController(object):
             self.screen.blit(self.fruitCaptured[i], (x, y))
         self.shader()
         pygame.display.update()
+
+    #changed -- minimum score to pass level
+    def met_score_requirement(self):
+        if self.level == 0:
+            if self.score >= 2500:
+                return True
+        elif self.level == 1:
+            if self.score >= 3000:
+                return True
+        else:
+            if self.score >= 3500:
+                return True
 
 
 if __name__ == "__main__":
