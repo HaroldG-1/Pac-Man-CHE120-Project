@@ -2,13 +2,8 @@ from constants import *
 
 class MazeBase(object):
     def __init__(self):
-        self.portalPairs = {}
         self.homeoffset = (0, 0)
         self.ghostNodeDeny = {UP:(), DOWN:(), LEFT:(), RIGHT:()}
-
-    def setPortalPairs(self, nodes):
-        for pair in list(self.portalPairs.values()):
-            nodes.setPortalPair(*pair)
 
     def connectHomeNodes(self, nodes):
         key = nodes.createHomeNodes(*self.homeoffset)
@@ -31,7 +26,6 @@ class Maze1(MazeBase):
     def __init__(self):
         MazeBase.__init__(self)
         self.name = "maze1"
-        self.portalPairs = {0:((0, 17), (27, 17))}
         self.homeoffset = (11.5, 14)
         self.homenodeconnectLeft = (12, 14)
         self.homenodeconnectRight = (15, 14)
@@ -45,7 +39,6 @@ class Maze2(MazeBase):
     def __init__(self):
         MazeBase.__init__(self)
         self.name = "maze2"
-        self.portalPairs = {0:((0, 4), (27, 4)), 1:((0, 26), (27, 26))}
         self.homeoffset = (11.5, 14)
         self.homenodeconnectLeft = (9, 14)
         self.homenodeconnectRight = (18, 14)
