@@ -1,3 +1,4 @@
+# Comments by Harold Guo, 21222786
 import pygame
 from pygame.locals import *
 from constants import *
@@ -12,7 +13,10 @@ from sprites import LifeSprites
 from sprites import MazeSprites
 from mazedata import MazeData
 
+#Creates a class which contains all the game information
 class GameController(object):
+    #When the object is first created, game data like score and lives is set to starting values
+    #Also prepares the screen, clock, text, and sprites
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode(SCREENSIZE, 0, 32)
@@ -33,6 +37,9 @@ class GameController(object):
         self.fruitCaptured = []
         self.mazedata = MazeData()
 
+    #This function fully restarts the game back to the initial conditions
+    #Resets lives, score, level, fruits, updates texts, pauses the game
+    #Called when the player loses all lives
     def restartGame(self):
         self.lives = 5
         self.level = 0
@@ -46,6 +53,9 @@ class GameController(object):
         self.lifesprites.resetLives(self.lives)
         self.fruitCaptured = []
 
+    #This function resets the positions of pacman and ghosts, fruits, and shows ready text
+    #Called when the player loses a life but still has more remaining
+    #Score, lives, and level don't reset because the game isn't over
     def resetLevel(self):
         self.pause.paused = True
         self.pacman.reset()
@@ -53,6 +63,8 @@ class GameController(object):
         self.fruit = None
         self.textgroup.showText(READYTXT)
 
+    #Increases the level by one and starts the new level
+    #Called once the player has beaten a level by eating all pellets
     def nextLevel(self):
         self.showEntities()
         self.level += 1
@@ -60,6 +72,8 @@ class GameController(object):
         self.startGame()
         self.textgroup.updateLevel(self.level)
 
+    #Prepares the game's background visuals, flashing effect for beating a level
+    #Sets the background to normal (no flashing) for the new round
     def setBackground(self):
         self.background_norm = pygame.surface.Surface(SCREENSIZE).convert()
         self.background_norm.fill(BLACK)
@@ -70,6 +84,10 @@ class GameController(object):
         self.flashBG = False
         self.background = self.background_norm
 
+    #Selects the appropriate maze layout for the level and the sprites for walls
+    #Creates the pacman and ghosts objects, puts them at their starting positions
+    #Places pellets in the maze
+    #Sets the nodes for the level which controls which direction entities can move
     def startGame(self):
         self.mazedata.loadMaze(self.level)
         self.mazesprites = MazeSprites(self.mazedata.obj.name+".txt", self.mazedata.obj.name+"_rotation.txt")
@@ -90,6 +108,9 @@ class GameController(object):
         self.ghosts.clyde.startNode.denyAccess(LEFT, self.ghosts.clyde)
         self.mazedata.obj.denyGhostsAccess(self.ghosts, self.nodes)
 
+    #This function sets the game to update 30 times per second, and performs the updates
+    #Updates text and pellet information, checks for events (collisions) if game isn't paused
+    #Updates pacman and ghosts info
     def update(self):
         dt = self.clock.tick(30) / 1000.0
         self.textgroup.update(dt)
@@ -101,13 +122,13 @@ class GameController(object):
             self.checkPelletEvents()
             self.checkGhostEvents()
             self.checkFruitEvents()
-
         if self.pacman.alive:
             if not self.pause.paused:
                 self.pacman.update(dt)
         else:
             self.pacman.update(dt)
 
+        #Uses a timer to switch between normal background and flashing background when appropriate
         if self.flashBG:
             self.flashTimer += dt
             if self.flashTimer >= self.flashTime:
@@ -117,16 +138,20 @@ class GameController(object):
                 else:
                     self.background = self.background_norm
 
+        #Deals with pauses, renders all the game visuals
         afterPauseMethod = self.pause.update(dt)
         if afterPauseMethod is not None:
             afterPauseMethod()
         self.checkEvents()
         self.render()
 
+    #Updates the player's score whenever they earn points
     def updateScore(self, points):
         self.score += points
         self.textgroup.updateScore(self.score)
 
+    #Stops the program if the player closes the game
+    #Pauses the game if the player presses spacebar
     def checkEvents(self):
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -142,6 +167,9 @@ class GameController(object):
                             self.textgroup.showText(PAUSETXT)
                             self.hideEntities()
 
+    #Checks if pacman collides with ghosts
+    #If ghosts are in "freight" mode, player gains points and ghosts are sent to their starting box
+    #Otherwise, the player loses a life, and the level resets with pacman and ghosts back to starting positions
     def checkGhostEvents(self):
         for ghost in self.ghosts:
             if self.pacman.collideGhost(ghost):
@@ -166,6 +194,10 @@ class GameController(object):
                          else:
                              self.pause.setPause(pauseTime=3, func=self.resetLevel)
 
+    #Spawns fruits and checks if pacman collides with fruits
+    #Fruits appear after a certain number of pellets are eaten
+    #If a fruit exists, player gains score if pacman collides with the fruit
+    #Fruit disappears after some time
     def checkFruitEvents(self):
         if self.pellets.numEaten == 50 or self.pellets.numEaten == 140:
             if self.fruit is None:
@@ -185,6 +217,10 @@ class GameController(object):
             elif self.fruit.destroy:
                 self.fruit = None
 
+    #Checks for collisions with pellets, increasing score if pacman eats them
+    #Releases the 3rd and 4th ghosts after a certain amount of pellets are eaten
+    #If the pellet is a power pellet, activates freight mode for ghosts
+    #If there are no pellets, the player wins the round and increments to the next level
     def checkPelletEvents(self):
         pellet = self.pacman.eatPellets(self.pellets.pelletList)
         if pellet:
@@ -202,14 +238,19 @@ class GameController(object):
                 self.hideEntities()
                 self.pause.setPause(pauseTime=3, func=self.nextLevel)
 
+    #Shows the pacman and ghost sprites
+    #Used when unpausing or starting new level
     def showEntities(self):
         self.pacman.visible = True
         self.ghosts.show()
 
+    #Hides the pacman and ghost sprites
+    #Used when game is paused or transitioning levels
     def hideEntities(self):
         self.pacman.visible = False
         self.ghosts.hide()
 
+    #Renders all the game visuals: pellets, fruits, pacman, ghosts, texts, background
     def render(self):
         self.screen.blit(self.background, (0, 0))
         self.pellets.render(self.screen)
@@ -229,7 +270,8 @@ class GameController(object):
             self.screen.blit(self.fruitCaptured[i], (x, y))
         pygame.display.update()
 
-    
+#Creates the game objects and starts the game once the file is executed
+#The while loops keeps updating the game until the player quits
 if __name__ == "__main__":
     game = GameController()
     game.startGame()
