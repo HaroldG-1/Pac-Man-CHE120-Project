@@ -60,13 +60,14 @@ class TextGroup(object):
         size = TILEHEIGHT
         self.alltext[SCORETXT] = Text("0".zfill(8), WHITE, 0, TILEHEIGHT, size)
         self.alltext[LEVELTXT] = Text(str(1).zfill(3), WHITE, 23*TILEWIDTH, TILEHEIGHT, size)
-        self.alltext[READYTXT] = Text("READY!", YELLOW, 11.25*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
+        self.alltext[READYTXT] = Text("READY! PRESS SPACE", YELLOW, 5*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.alltext[PAUSETXT] = Text("PAUSED!", YELLOW, 10.625*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.alltext[GAMEOVERTXT] = Text("GAMEOVER!", YELLOW, 10*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.addText("SCORE", WHITE, 0, 0, size)
         #changed
         self.goaltxt_id = self.addText("Goal: 2500", WHITE, 150, 0, size)
         self.addText("LEVEL", WHITE, 23*TILEWIDTH, 0, size)
+        
 
     def update(self, dt):
         for tkey in list(self.alltext.keys()):
