@@ -261,7 +261,7 @@ class GameController(object):
                     if self.met_score_requirement():
                         self.pause.setPause(pauseTime=3, func=self.nextLevel)
                     else:
-                        self.textgroup.showText(GAMEOVERTXT)
+                        self.textgroup.showText(GAMEOVERTXT2)
                         self.pause.setPause(pauseTime=3, func=self.restartGame)
                         
             elif pellet:
@@ -335,13 +335,13 @@ class GameController(object):
     #changed -- minimum score to pass level
     def met_score_requirement(self):
         if self.level == 0:
-            if self.score >= 2500:
-                return True
-        elif self.level == 1:
             if self.score >= 3000:
                 return True
-        else:
+        elif self.level == 1:
             if self.score >= 3500:
+                return True
+        else:
+            if self.score >= 4000:
                 return True
 
 

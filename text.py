@@ -63,9 +63,10 @@ class TextGroup(object):
         self.alltext[READYTXT] = Text("READY! PRESS SPACE", YELLOW, 5*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.alltext[PAUSETXT] = Text("PAUSED!", YELLOW, 10.625*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.alltext[GAMEOVERTXT] = Text("GAMEOVER!", YELLOW, 10*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
+        self.alltext[GAMEOVERTXT2]  = Text("GAMEOVER DIDN'T MEET GOAL!", YELLOW, 1*TILEWIDTH, 20*TILEHEIGHT, size, visible=False)
         self.addText("SCORE", WHITE, 0, 0, size)
         #changed
-        self.goaltxt_id = self.addText("Goal: 2500", WHITE, 150, 0, size)
+        self.goaltxt_id = self.addText("Goal: 3000", WHITE, 150, 0, size)
         self.addText("LEVEL", WHITE, 23*TILEWIDTH, 0, size)
         
 
@@ -83,6 +84,7 @@ class TextGroup(object):
         self.alltext[READYTXT].visible = False
         self.alltext[PAUSETXT].visible = False
         self.alltext[GAMEOVERTXT].visible = False
+        self.alltext[GAMEOVERTXT2].visible = False
 
     def updateScore(self, score):
         self.updateText(SCORETXT, str(score).zfill(8))
@@ -92,11 +94,11 @@ class TextGroup(object):
         self.updateText(LEVELTXT, str(level + 1).zfill(3))
 
         if level == 0:
-            newgoal = 2500
-        elif level == 1:
             newgoal = 3000
-        else:
+        elif level == 1:
             newgoal = 3500
+        else:
+            newgoal = 4000
         self.updateGoal(newgoal)
 
     
