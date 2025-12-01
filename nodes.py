@@ -147,16 +147,6 @@ class NodeGroup(object):
         return nodes[0]
 
     ##############################################################
-    # PORTAL CONNECTION
-    ##############################################################
-    def setPortalPair(self, pair1, pair2):
-        key1 = self.constructKey(*pair1)
-        key2 = self.constructKey(*pair2)
-        if key1 in self.nodesLUT and key2 in self.nodesLUT:
-            self.nodesLUT[key1].neighbors[PORTAL] = self.nodesLUT[key2]
-            self.nodesLUT[key2].neighbors[PORTAL] = self.nodesLUT[key1]
-
-    ##############################################################
     # CREATE GHOST HOUSE NODES
     ##############################################################
     def createHomeNodes(self, xoffset, yoffset):
