@@ -1,5 +1,5 @@
-# to see differences between our additions and the original type the below into your terminal!
-# git diff 67cf98eb1e6d9c835b0d55dcd2b81436a4846dbe
+#Abiram Sarvananthan
+#Harold Guo
 
 import pygame
 from pygame.locals import *

@@ -1,3 +1,5 @@
+#Matthew Kennedy
+#Gabriel Tirona
 from constants import *
 
 class MainMode(object):

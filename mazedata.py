@@ -1,3 +1,5 @@
+#Abiram Sarvananthan
+#Harold Guo
 from constants import *
 
 class MazeBase(object):
