@@ -281,7 +281,8 @@ class GameController(object):
                     if self.met_score_requirement():
                         self.pause.setPause(pauseTime=3, func=self.nextLevel)
                     else:
-                        self.restartGame()
+                        self.textgroup.showText(GAMEOVERTXT2)
+                        self.pause.setPause(pauseTime=3, func=self.restartGame)
 
         '''
         Turns on draw flags for moveable entities
