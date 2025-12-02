@@ -1,3 +1,7 @@
+#Abiram Sarvananthan
+#Harold Guo
+#Matthew Kennedy
+#Gabriel Tirona
 TILEWIDTH = 16
 TILEHEIGHT = 16
 NROWS = 36

@@ -1,11 +1,14 @@
+#Abiram Sarvananthan
+#Harold Guo
+#Matthew Kennedy
+#Gabriel Tirona - Commenter
 import pygame
 from vector import Vector2
 from constants import *
 import numpy as np
 
-##############################################################
+
 # NODE CLASS — represents a single intersection in the maze
-##############################################################
 class Node(object):
     def __init__(self, x, y):
         # Position of this node in pixel coordinates
@@ -26,9 +29,8 @@ class Node(object):
             RIGHT: [PACMAN, BLINKY, PINKY, INKY, CLYDE, FRUIT],
         }
 
-    ##############################################################
+
     # ACCESS CONTROL
-    ##############################################################
     def denyAccess(self, direction, entity):
         # Removes entity permission
         if entity.name in self.access[direction]:
@@ -39,9 +41,8 @@ class Node(object):
         if entity.name not in self.access[direction]:
             self.access[direction].append(entity.name)
 
-    ##############################################################
+
     # DRAWING / DEBUG VISUALIZATION
-    ##############################################################
     def render(self, screen):
         # Draw lines connecting this node to its neighbors
         for n in self.neighbors.keys():
@@ -53,9 +54,7 @@ class Node(object):
 
 
 
-##############################################################
 # NODE GROUP — creates all nodes based on the maze layout
-##############################################################
 class NodeGroup(object):
     def __init__(self, level):
         self.level = level
@@ -71,15 +70,12 @@ class NodeGroup(object):
 
         self.homekey = None  # Entrance node for ghost house
 
-    ##############################################################
     # FILE LOADING
-    ##############################################################
     def readMazeFile(self, textfile):
         return np.loadtxt(textfile, dtype='<U1')
 
-    ##############################################################
+
     # CREATE ALL NODES FROM MAZE DATA
-    ##############################################################
     def createNodeTable(self, data, xoffset=0, yoffset=0):
         for row in range(data.shape[0]):
             for col in range(data.shape[1]):
@@ -92,9 +88,8 @@ class NodeGroup(object):
         # Convert tile position → pixel coordinates
         return x * TILEWIDTH, y * TILEHEIGHT
 
-    ##############################################################
+
     # CONNECT NODES HORIZONTALLY
-    ##############################################################
     def connectHorizontally(self, data, xoffset=0, yoffset=0):
         for row in range(data.shape[0]):
             key = None
@@ -111,9 +106,7 @@ class NodeGroup(object):
                 elif data[row][col] not in self.pathSymbols:
                     key = None  # Reset connection state
 
-    ##############################################################
     # CONNECT NODES VERTICALLY
-    ##############################################################
     def connectVertically(self, data, xoffset=0, yoffset=0):
         dataT = data.transpose()
         for col in range(dataT.shape[0]):
@@ -131,9 +124,8 @@ class NodeGroup(object):
                 elif dataT[col][row] not in self.pathSymbols:
                     key = None
 
-    ##############################################################
+    
     # NODE LOOKUP HELPERS
-    ##############################################################
     def getNodeFromPixels(self, xpixel, ypixel):
         return self.nodesLUT.get((xpixel, ypixel), None)
 
@@ -146,9 +138,8 @@ class NodeGroup(object):
         nodes = list(self.nodesLUT.values())
         return nodes[0]
 
-    ##############################################################
+
     # CREATE GHOST HOUSE NODES
-    ##############################################################
     def createHomeNodes(self, xoffset, yoffset):
         homedata = np.array([
             ['X','X','+','X','X'],
@@ -166,17 +157,15 @@ class NodeGroup(object):
         self.homekey = self.constructKey(xoffset + 2, yoffset)
         return self.homekey
 
-    ##############################################################
+
     # CONNECT GHOST HOUSE TO MAZE
-    ##############################################################
     def connectHomeNodes(self, homekey, otherkey, direction):
         key = self.constructKey(*otherkey)
         self.nodesLUT[homekey].neighbors[direction] = self.nodesLUT[key]
         self.nodesLUT[key].neighbors[direction * -1] = self.nodesLUT[homekey]
 
-    ##############################################################
+
     # ACCESS CONTROL HELPERS
-    ##############################################################
     def denyAccess(self, col, row, direction, entity):
         node = self.getNodeFromTiles(col, row)
         if node:
@@ -209,9 +198,8 @@ class NodeGroup(object):
         for entity in entities:
             self.allowHomeAccess(entity)
 
-    ##############################################################
+
     # DRAW ALL NODES (DEBUG)
-    ##############################################################
     def render(self, screen):
         for node in self.nodesLUT.values():
             node.render(screen)

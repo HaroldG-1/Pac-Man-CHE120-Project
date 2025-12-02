@@ -1,3 +1,7 @@
+#Abiram Sarvananthan
+#Harold Guo
+#Matthew Kennedy - Commenter
+#Gabriel Tirona
 import pygame
 from constants import *
 import numpy as np

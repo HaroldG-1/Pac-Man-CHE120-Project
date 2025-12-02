@@ -1,3 +1,7 @@
+#Abiram Sarvananthan - Commenter
+#Harold Guo
+#Matthew Kennedy
+#Gabriel Tirona
 from constants import *
 
 

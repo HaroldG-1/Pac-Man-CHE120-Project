@@ -1,11 +1,14 @@
+#Abiram Sarvananthan
+#Harold Guo
+#Matthew Kennedy
+#Gabriel Tirona - Commenter
 import pygame
 from vector import Vector2
 from constants import *
 
 
-###########################
+
 # Text Object
-###########################
 class Text(object):
     def __init__(self, text, color, x, y, size, time=None, id=None, visible=True):
         self.id = id
@@ -62,9 +65,8 @@ class Text(object):
             screen.blit(self.label, (x, y))
 
 
-###########################
+
 # Text Group Controller
-###########################
 class TextGroup(object):
     def __init__(self):
         self.nextid = 10

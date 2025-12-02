@@ -1,3 +1,8 @@
+#Abiram Sarvananthan - Commenter
+#Harold Guo
+#Matthew Kennedy
+#Gabriel Tirona
+
 import pygame
 from pygame.locals import *
 from vector import Vector2

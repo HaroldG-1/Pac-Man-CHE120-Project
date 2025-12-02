@@ -1,3 +1,7 @@
+#Abiram Sarvananthan
+#Harold Guo
+#Matthew Kennedy - Commenter
+#Gabriel Tirona
 import math
 
 

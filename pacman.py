@@ -1,4 +1,7 @@
-# Comments by Harold Guo, 21222786
+#Abiram Sarvananthan
+#Harold Guo - Commenter
+#Matthew Kennedy
+#Gabriel Tirona
 import pygame
 from pygame.locals import *
 from vector import Vector2

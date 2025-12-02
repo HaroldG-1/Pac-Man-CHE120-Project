@@ -1,3 +1,7 @@
+#Abiram Sarvananthan
+#Harold Guo
+#Matthew Kennedy
+#Gabriel Tirona
 from constants import *
 
 class Animator(object):

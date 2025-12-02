@@ -1,3 +1,7 @@
+#Abiram Sarvananthan
+#Harold Guo
+#Matthew Kennedy
+#Gabriel Tirona
 import pygame
 from entity import Entity
 from constants import *
